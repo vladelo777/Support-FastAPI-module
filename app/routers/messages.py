@@ -17,7 +17,7 @@ async def create_message(message_in: MessageCreate, db: AsyncSession = Depends(g
 
 
 @router.get("/ticket/{ticket_id}", response_model=List[MessageRead])
-async def get_messages(ticket_id: int, db: AsyncSession = Depends(get_db)):
+async def get_messages_by_ticket(ticket_id: int, db: AsyncSession = Depends(get_db)):
     service = MessageService(db)
     messages = await service.get_messages_by_ticket(ticket_id)
     if messages is None:

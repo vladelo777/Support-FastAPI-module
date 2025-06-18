@@ -11,5 +11,8 @@ class NoteService:
     async def create_note(self, note_in: NoteCreate) -> Note:
         return await CRUDNote.create(self.db, note_in)
 
-    async def get_notes_by_ticket(self, ticket_id: int) -> list[Note]:
-        return await CRUDNote.get_by_ticket(self.db, ticket_id)
+    async def get_note(self, note_id: int) -> Note | None:
+        return await CRUDNote.get(self.db, note_id)
+
+    async def list_notes(self) -> list[Note]:
+        return await CRUDNote.get_all(self.db)

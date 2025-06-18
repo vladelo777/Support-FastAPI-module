@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from enum import Literal
+from typing import Literal
 
 
 class UserBase(BaseModel):

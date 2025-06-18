@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Text, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from enum import Enum as PyEnum
-from app.db.base import Base
+from app.database import Base
 
 
 class TicketStatus(PyEnum):

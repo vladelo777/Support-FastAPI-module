@@ -1,12 +1,13 @@
 from pydantic import BaseModel
-from typing import Optional, Literal
+from typing import Optional
 from datetime import datetime
+from app.models.ticket import TicketPriority, TicketStatus
 
 
 class TicketBase(BaseModel):
     title: str
     description: Optional[str] = None
-    priority: Literal["Низкий", "Средний", "Высокий", "Срочный"] = "Средний"
+    priority: TicketPriority = TicketPriority.MEDIUM
     category: Optional[str] = None
     queue_id: Optional[int] = None
 
@@ -18,8 +19,8 @@ class TicketCreate(TicketBase):
 class TicketUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
-    status: Optional[Literal["Открыт", "В работе", "Ожидает клиента", "Закрыт"]] = None
-    priority: Optional[Literal["Низкий", "Средний", "Высокий", "Срочный"]] = None
+    status: Optional[TicketStatus] = None
+    priority: Optional[TicketPriority] = None
     category: Optional[str] = None
     agent_id: Optional[int] = None
     queue_id: Optional[int] = None
@@ -27,11 +28,12 @@ class TicketUpdate(BaseModel):
 
 class TicketRead(TicketBase):
     id: int
-    status: Literal["Открыт", "В работе", "Ожидает клиента", "Закрыт"]
+    status: TicketStatus
     client_id: int
     agent_id: Optional[int]
     created_at: datetime
     updated_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+        use_enum_values = True

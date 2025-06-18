@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Text, DateTime
 from sqlalchemy.orm import relationship
+from sqlalchemy.types import Enum as SQLAlchemyEnum
 from datetime import datetime
 from enum import Enum as PyEnum
 from app.database import Base
@@ -29,8 +30,8 @@ class Ticket(Base):
     status = Column(Enum(TicketStatus), default=TicketStatus.OPEN, nullable=False)
     priority = Column(Enum(TicketPriority), default=TicketPriority.MEDIUM, nullable=False)
     category = Column(String, nullable=True)
-    queue_id = Column(Integer, ForeignKey("queues.id"), nullable=True)
 
+    queue_id = Column(Integer, ForeignKey("queues.id"), nullable=True)
     client_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     agent_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 

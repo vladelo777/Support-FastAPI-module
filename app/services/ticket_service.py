@@ -11,6 +11,9 @@ class TicketService:
     async def create_ticket(self, ticket_in: TicketCreate) -> Ticket:
         return await CRUDTicket.create(self.db, ticket_in)
 
+    async def get_all_tickets(self) -> list[Ticket]:
+        return await CRUDTicket.get_all(self.db)
+
     async def get_ticket(self, ticket_id: int) -> Ticket | None:
         return await CRUDTicket.get(self.db, ticket_id)
 

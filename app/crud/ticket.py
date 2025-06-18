@@ -19,6 +19,11 @@ class CRUDTicket:
         return result.scalars().first()
 
     @staticmethod
+    async def get_all(db: AsyncSession) -> list[Ticket]:
+        result = await db.execute(select(Ticket))
+        return result.scalars().all()
+
+    @staticmethod
     async def update(db: AsyncSession, ticket: Ticket, ticket_in: TicketUpdate) -> Ticket:
         for field, value in ticket_in.dict(exclude_unset=True).items():
             setattr(ticket, field, value)

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.routers import tickets, messages, note
+from app.routers import tickets, messages, note, ws_support
 from app.database import engine, Base
 from app import models
 
@@ -16,3 +16,6 @@ async def init_models():
 app.include_router(tickets.router)
 app.include_router(messages.router)
 app.include_router(note.router)
+app.include_router(ws_support.router)
+
+# Для запуска – uvicorn app.main:app --reload

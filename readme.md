@@ -14,19 +14,16 @@
 ### 📦 Основные сущности:
 
 - **Ticket**
-    - `id`, `title`, `status`, `priority_id`, `category_id`, `queue_id`, `client_id`, `agent_id`
+    - `id`, `title`, `description`, `status`, `priority`, `category`, `queue_id`, `client_id`, `agent_id`, `created_ad`,
+      `updated_ad`
 - **Message**
-    - `id`, `ticket_id`, `author_id`, `text`, `timestamp`
+    - `id`, `ticket_id`, `author_id`, `content`, `is_from_agent`, `created_ad`
 - **Note**
-    - `id`, `ticket_id`, `author_id`, `text` (доступно только агенту)
+    - `id`, `ticket_id`, `author_id`, `content`, `created_ad`
 - **Queue**
-    - `id`, `name` (например, “Техническая поддержка”)
+    - `id`, `name`, `description`
 - **User**
-    - `id`, `name`, `email`, `role` (`agent` / `client`)
-- **Category**
-    - `id`, `name`
-- **Priority**
-    - `id`, `name`
+    - `id`, `email`, `name`, `role` (`agent` / `client`)
 
 ### 🔧 Реализация:
 
@@ -36,12 +33,14 @@
     - `/messages/`
     - `/notes/`
 - Статусы тикетов:
-    - `open`, `in_progress`, `waiting_for_client`, `closed`
+    - `Открыт`, `В работе`, `"Ожидает клиента`, `Закрыт`
+- Приоритеты:
+    - `Низкий`, `Средний`, `"Высокий`, `Срочный`
 - Swagger UI: [`/docs`](http://localhost:8000/docs)
 
 ---
 
-## ⏳ Этап 2. WebSocket и Email-обработка
+## ✅ Этап 2. WebSocket и Email-обработка
 
 ### 📲 WebSocket-чат
 
@@ -146,7 +145,7 @@
 | Этап | Название                             | Примерный срок | Реальный срок |
 |------|--------------------------------------|----------------|---------------|
 | 1    | Архитектура + тикеты                 | 11 июня        | 13 июня ✅     |
-| 2    | WebSocket + Email                    | 18 июня        | В процессе ⏳  |
+| 2    | WebSocket + Email                    | 18 июня        | 24 июня ✅     |
 | 3    | Вложения + заметки + FRT/TTR         | 25 июня        | В процессе ⏳  |
 | 4    | База знаний + бот + перевод к агенту | 2 июля         | В процессе ⏳  |
 

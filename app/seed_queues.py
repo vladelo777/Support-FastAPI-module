@@ -18,6 +18,7 @@ async def seed_queues():
             Queue(name="Биллинг", description='Очередь для вопросов по оплате'),
             Queue(name="Логистика", description='Очередь для вопросов по доставке'),
             Queue(name="Общие вопросы", description='Очередь для общих вопросов'),
+            Queue(name="Вопросы с почты", description='Очередь для вопросов, падающих с почты'),
         ]
         session.add_all(queues)
         await session.commit()
@@ -26,3 +27,5 @@ async def seed_queues():
 
 if __name__ == "__main__":
     asyncio.run(seed_queues())
+
+# Для запуска – python -m app.seed_queues

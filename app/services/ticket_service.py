@@ -1,7 +1,10 @@
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.crud.ticket import CRUDTicket
 from app.schemas.ticket import TicketCreate, TicketUpdate
 from app.models.ticket import Ticket
+from app.crud.queue import CRUDQueue
 
 
 class TicketService:
@@ -9,6 +12,10 @@ class TicketService:
         self.db = db
 
     async def create_ticket(self, ticket_in: TicketCreate) -> Ticket:
+        # ⛔️ Проверка на существующую очередь
+        queue = await CRUDQueue.get(self.db, ticket_in.queue_id)
+        if not queue:
+            raise HTTPException(status_code=400, detail="Очередь с таким ID не существует")
         return await CRUDTicket.create(self.db, ticket_in)
 
     async def get_all_tickets(self) -> list[Ticket]:

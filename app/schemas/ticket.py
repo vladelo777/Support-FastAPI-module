@@ -23,7 +23,7 @@ class TicketUpdate(BaseModel):
     priority: Optional[TicketPriority] = None
     category: Optional[str] = None
     agent_id: Optional[int] = None
-    queue_id: Optional[int] = None
+    queue_id: int
 
 
 class TicketRead(TicketBase):

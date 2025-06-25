@@ -1,6 +1,6 @@
 from typing import Optional
 from fastapi import UploadFile
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from app.models.attachment import Attachment
 from app.schemas.attachment import AttachmentCreate
 from app.crud.attachment import CRUDAttachment
@@ -10,7 +10,7 @@ import os
 
 
 class AttachmentService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Session):
         self.db = db
 
     async def save_file(

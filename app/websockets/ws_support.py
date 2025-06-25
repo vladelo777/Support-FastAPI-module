@@ -1,5 +1,5 @@
 from fastapi import WebSocket, WebSocketDisconnect, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 # from app.database import async_session
 # from app.database import get_db
 from app.schemas.message import MessageCreate

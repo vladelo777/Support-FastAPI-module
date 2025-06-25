@@ -15,7 +15,7 @@ async def periodic_email_check():
     while True:
         logger.info("🔄 Проверка новых писем...")
         try:
-            await check_email()
-        except Exception as e:
-            logger.exception(f"❌ Ошибка при проверке email: {e}")
-        await asyncio.sleep(60)  # интервал между проверками
+            check_email()
+        except Exception:
+            logger.exception("❌ Ошибка при проверке email")
+        await asyncio.sleep(60)  # Интервал между проверками в секундах

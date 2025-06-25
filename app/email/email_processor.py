@@ -3,10 +3,10 @@ import email
 import logging
 from email.header import decode_header
 from email.utils import parseaddr
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from app.schemas.ticket import TicketCreate
 from app.services.ticket_service import TicketService
-from app.database import async_session
+from app.database import SessionLocal
 from app.config import IMAP_SERVER, EMAIL_ACCOUNT, EMAIL_PASSWORD, QUEUE_ID, DEFAULT_CLIENT_ID
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ def get_email_body(message):
     return ""
 
 
-async def process_email(msg, db: AsyncSession):
+def process_email(msg, db: Session):
     subject = decode_mime_words(msg["Subject"] or "Без темы")
     from_email = parseaddr(msg.get("From"))[1]
     body = get_email_body(msg)
@@ -44,11 +44,11 @@ async def process_email(msg, db: AsyncSession):
         queue_id=QUEUE_ID
     )
     service = TicketService(db)
-    await service.create_ticket(ticket_data)
+    service.create_ticket(ticket_data)
     logger.info(f"📨 Создан тикет из email от {from_email}: {subject}")
 
 
-async def check_email():
+def check_email():
     try:
         mail = imaplib.IMAP4_SSL(IMAP_SERVER)
         mail.login(EMAIL_ACCOUNT, EMAIL_PASSWORD)
@@ -64,13 +64,13 @@ async def check_email():
             logger.info("📭 Новых писем нет.")
             return
 
-        async with async_session() as db:
+        with SessionLocal() as db:
             for e_id in email_ids:
                 _, msg_data = mail.fetch(e_id, "(RFC822)")
                 for response_part in msg_data:
                     if isinstance(response_part, tuple):
                         msg = email.message_from_bytes(response_part[1])
-                        await process_email(msg, db)
+                        process_email(msg, db)
 
         mail.logout()
 

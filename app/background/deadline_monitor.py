@@ -3,7 +3,7 @@ import logging
 from sqlalchemy import select
 from datetime import datetime, timedelta
 
-from app.database import async_session
+from app.database import SessionLocal
 from app.models.ticket import TicketStatus, Ticket
 
 logger = logging.getLogger(__name__)
@@ -28,10 +28,10 @@ def format_time_delta(delta: timedelta) -> str:
 async def monitor_deadlines():
     while True:
         try:
-            async with async_session() as session:
+            with SessionLocal() as session:
                 now = datetime.now()
 
-                result = await session.execute(select(Ticket))
+                result = session.execute(select(Ticket))
                 tickets = result.scalars().all()
 
                 found_violations = False

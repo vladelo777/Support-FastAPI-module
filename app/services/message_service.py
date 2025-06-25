@@ -1,11 +1,11 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from app.crud.message import CRUDMessage
 from app.schemas.message import MessageCreate
 from app.models.message import Message
 
 
 class MessageService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Session):
         self.db = db
 
     async def create_message(self, message_in: MessageCreate) -> Message:

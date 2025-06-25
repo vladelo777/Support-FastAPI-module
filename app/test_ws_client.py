@@ -30,8 +30,7 @@ async def test_ws():
 
         print(f"Тикет создан с id={ticket_id}")
 
-        # Теперь можно отправлять сообщения в чат с этим ticket_id
-        # Пример: отправим одно сообщение
+        # Отправляем одно сообщение в чат с этим ticket_id
         message_data = {
             "ticket_id": ticket_id,
             "author_id": 1,  # подставь id автора (client или agent)
@@ -45,4 +44,5 @@ async def test_ws():
         msg_response = await websocket.recv()
         print(f"Получено сообщение: {msg_response}")
 
-asyncio.run(test_ws())
+if __name__ == "__main__":
+    asyncio.run(test_ws())

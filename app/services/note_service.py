@@ -1,11 +1,11 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from app.crud.note import CRUDNote
 from app.schemas.note import NoteCreate
 from app.models.note import Note
 
 
 class NoteService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Session):
         self.db = db
 
     async def create_note(self, note_in: NoteCreate) -> Note:

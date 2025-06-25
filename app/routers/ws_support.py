@@ -1,5 +1,5 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.services.ticket_service import TicketService
@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 @router.websocket("/ws/support")
-async def websocket_endpoint(websocket: WebSocket, db: AsyncSession = Depends(get_db)):
+async def websocket_endpoint(websocket: WebSocket, db: Session = Depends(get_db)):
     """
     WebSocket endpoint для поддержки клиентов.
 

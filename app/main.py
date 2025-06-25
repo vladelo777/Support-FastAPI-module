@@ -12,9 +12,6 @@ from app.background.deadline_monitor import monitor_deadlines
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Создание таблиц при старте
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
 
     # Создание папки для вложений, если нет
     os.makedirs("uploads", exist_ok=True)

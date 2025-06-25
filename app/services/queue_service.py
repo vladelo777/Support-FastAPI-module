@@ -1,11 +1,11 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from app.crud.queue import CRUDQueue
 from app.schemas.queue import QueueCreate
 from app.models.queue import Queue
 
 
 class QueueService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Session):
         self.db = db
 
     async def create_queue(self, queue_in: QueueCreate) -> Queue:

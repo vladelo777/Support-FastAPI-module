@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from datetime import timedelta, datetime
 
 from app.crud.ticket import CRUDTicket
@@ -19,7 +19,7 @@ FRT_TTR_DEADLINES = {
 
 
 class TicketService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Session):
         self.db = db
 
     async def create_ticket(self, ticket_in: TicketCreate) -> Ticket:
@@ -52,7 +52,7 @@ class TicketService:
         if not ticket:
             return None
 
-        ## Проверка агента
+        # Проверка агента
         if ticket_in.agent_id is not None:
             agent = await CRUDUser.get(self.db, ticket_in.agent_id)
             if not agent:

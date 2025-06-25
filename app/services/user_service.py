@@ -1,11 +1,11 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from app.crud.user import CRUDUser
 from app.schemas.user import UserCreate
 from app.models.user import User
 
 
 class UserService:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: Session):
         self.db = db
 
     async def create_user(self, user_in: UserCreate) -> User:

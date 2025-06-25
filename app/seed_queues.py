@@ -1,12 +1,11 @@
-import asyncio
-from app.database import async_session
+from app.database import SessionLocal
 from app.models.queue import Queue
 from sqlalchemy import select
 
 
-async def seed_queues():
-    async with async_session() as session:
-        result = await session.execute(select(Queue))
+def seed_queues():
+    with SessionLocal() as session:
+        result = session.execute(select(Queue))
         existing = result.scalars().all()
 
         if existing:
@@ -21,11 +20,11 @@ async def seed_queues():
             Queue(name="Вопросы с почты", description='Очередь для вопросов, падающих с почты'),
         ]
         session.add_all(queues)
-        await session.commit()
+        session.commit()
         print("Очереди успешно добавлены")
 
 
 if __name__ == "__main__":
-    asyncio.run(seed_queues())
+    seed_queues()
 
 # Для запуска – python -m app.seed_queues

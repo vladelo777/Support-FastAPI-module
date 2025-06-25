@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from typing import List
 
 from app.schemas.message import MessageCreate, MessageRead
@@ -10,14 +10,14 @@ router = APIRouter(prefix="/messages", tags=["messages"])
 
 
 @router.post("/", response_model=MessageRead, status_code=status.HTTP_201_CREATED)
-async def create_message(message_in: MessageCreate, db: AsyncSession = Depends(get_db)):
+async def create_message(message_in: MessageCreate, db: Session = Depends(get_db)):
     service = MessageService(db)
     message = await service.create_message(message_in)
     return message
 
 
 @router.get("/ticket/{ticket_id}", response_model=List[MessageRead])
-async def get_messages_by_ticket(ticket_id: int, db: AsyncSession = Depends(get_db)):
+async def get_messages_by_ticket(ticket_id: int, db: Session = Depends(get_db)):
     service = MessageService(db)
     messages = await service.get_messages_by_ticket(ticket_id)
     if messages is None:

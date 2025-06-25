@@ -7,9 +7,9 @@ from app.models.ticket import TicketPriority, TicketStatus
 class TicketBase(BaseModel):
     title: str
     description: Optional[str] = None
-    priority: TicketPriority = TicketPriority.MEDIUM
+    priority: TicketPriority = TicketPriority.LOW
     category: Optional[str] = None
-    queue_id: Optional[int] = None
+    queue_id: int
 
 
 class TicketCreate(TicketBase):
@@ -22,8 +22,7 @@ class TicketUpdate(BaseModel):
     status: Optional[TicketStatus] = None
     priority: Optional[TicketPriority] = None
     category: Optional[str] = None
-    agent_id: Optional[int] = None
-    queue_id: int
+    agent_id: int
 
 
 class TicketRead(TicketBase):

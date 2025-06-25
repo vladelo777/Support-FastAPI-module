@@ -7,6 +7,8 @@ from app.schemas.ticket import TicketCreate, TicketUpdate
 from app.models.ticket import Ticket, TicketPriority
 from app.crud.queue import CRUDQueue
 from app.utils.deadlines import get_deadlines_by_priority
+from app.crud.user import CRUDUser
+from app.models.user import UserRole
 
 FRT_TTR_DEADLINES = {
     TicketPriority.LOW: (timedelta(hours=12), timedelta(days=3)),
@@ -26,11 +28,17 @@ class TicketService:
         if not queue:
             raise HTTPException(status_code=400, detail="Очередь с таким ID не существует")
 
+        # Проверка клиента
+        client = await CRUDUser.get(self.db, ticket_in.client_id)
+        if not client:
+            raise HTTPException(status_code=400, detail="Данный client_id не существует!")
+        if client.role != UserRole.client:
+            raise HTTPException(status_code=400, detail="Данный user не является клиентом!")
+
         # 🎯 Вычисляем дедлайны
         now = datetime.now()
         frt_deadline, ttr_deadline = get_deadlines_by_priority(ticket_in.priority, now)
 
-        # Передаём в CRUD
         return await CRUDTicket.create(self.db, ticket_in, frt_deadline=frt_deadline, ttr_deadline=ttr_deadline)
 
     async def get_all_tickets(self) -> list[Ticket]:
@@ -43,4 +51,13 @@ class TicketService:
         ticket = await self.get_ticket(ticket_id)
         if not ticket:
             return None
+
+        ## Проверка агента
+        if ticket_in.agent_id is not None:
+            agent = await CRUDUser.get(self.db, ticket_in.agent_id)
+            if not agent:
+                raise HTTPException(status_code=400, detail="Данный agent_id не существует!")
+            if agent.role != UserRole.agent:
+                raise HTTPException(status_code=400, detail="Данный user не является агентом!")
+
         return await CRUDTicket.update(self.db, ticket, ticket_in)

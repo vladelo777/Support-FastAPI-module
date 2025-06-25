@@ -31,17 +31,18 @@ async def monitor_deadlines():
             async with async_session() as session:
                 now = datetime.now()
 
-                result = await session.execute(
-                    select(Ticket).where(Ticket.status != TicketStatus.CLOSED)
-                )
+                result = await session.execute(select(Ticket))
                 tickets = result.scalars().all()
 
                 found_violations = False
 
                 for ticket in tickets:
+                    if ticket.status == TicketStatus.CLOSED:
+                        continue  # ❌ Пропускаем закрытые тикеты
+
                     messages = []
 
-                    if ticket.frt_deadline:
+                    if ticket.status == TicketStatus.OPEN and ticket.frt_deadline:
                         if now > ticket.frt_deadline:
                             messages.append("⛔ FRT просрочен")
                         elif now + timedelta(hours=1) > ticket.frt_deadline:

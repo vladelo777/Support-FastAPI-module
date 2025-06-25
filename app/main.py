@@ -1,12 +1,13 @@
+import asyncio
+import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
-import asyncio
-import os
 
 from app.routers import tickets, messages, note, ws_support, queue, attachments
 from app.database import engine, Base
 from app.email.email_task import periodic_email_check
+from app.background.deadline_monitor import monitor_deadlines
 
 
 @asynccontextmanager
@@ -18,17 +19,19 @@ async def lifespan(app: FastAPI):
     # Создание папки для вложений, если нет
     os.makedirs("uploads", exist_ok=True)
 
-    # Запуск фоновой задачи (email polling)
+    # 🔁 Запуск фоновых задач
     email_task = asyncio.create_task(periodic_email_check())
+    monitor_task = asyncio.create_task(monitor_deadlines())
 
     yield
 
-    # Остановка фоновой задачи
-    email_task.cancel()
-    try:
-        await email_task
-    except asyncio.CancelledError:
-        pass
+    # ⛔️ Остановка фоновых задач
+    for task in (email_task, monitor_task):
+        task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            pass
 
 
 app = FastAPI(
@@ -47,4 +50,4 @@ app.include_router(ws_support.router)
 app.include_router(queue.router)
 app.include_router(attachments.router)
 
-# Для запуска: uvicorn app.main:app --reload
+# Для запуска – uvicorn app.main:app --reload

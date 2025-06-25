@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey, Text, DateTime
 from sqlalchemy.orm import relationship
-from sqlalchemy.types import Enum as SQLAlchemyEnum
 from datetime import datetime
 from enum import Enum as PyEnum
+
 from app.database import Base
 
 
@@ -35,8 +35,11 @@ class Ticket(Base):
     client_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     agent_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    frt_deadline = Column(DateTime, nullable=True)
+    ttr_deadline = Column(DateTime, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     queue = relationship("Queue", back_populates="tickets")
     client = relationship("User", foreign_keys=[client_id])

@@ -1,13 +1,24 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from datetime import datetime
+
 from app.models.ticket import Ticket
 from app.schemas.ticket import TicketCreate, TicketUpdate
 
 
 class CRUDTicket:
     @staticmethod
-    async def create(db: AsyncSession, ticket_in: TicketCreate) -> Ticket:
-        ticket = Ticket(**ticket_in.dict())
+    async def create(
+            db: AsyncSession,
+            ticket_in: TicketCreate,
+            frt_deadline: datetime,
+            ttr_deadline: datetime,
+    ) -> Ticket:
+        ticket = Ticket(
+            **ticket_in.model_dump(),
+            frt_deadline=frt_deadline,
+            ttr_deadline=ttr_deadline,
+        )
         db.add(ticket)
         await db.commit()
         await db.refresh(ticket)

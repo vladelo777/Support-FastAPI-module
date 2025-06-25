@@ -1,10 +1,19 @@
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import timedelta, datetime
 
 from app.crud.ticket import CRUDTicket
 from app.schemas.ticket import TicketCreate, TicketUpdate
-from app.models.ticket import Ticket
+from app.models.ticket import Ticket, TicketPriority
 from app.crud.queue import CRUDQueue
+from app.utils.deadlines import get_deadlines_by_priority
+
+FRT_TTR_DEADLINES = {
+    TicketPriority.LOW: (timedelta(hours=12), timedelta(days=3)),
+    TicketPriority.MEDIUM: (timedelta(hours=4), timedelta(days=2)),
+    TicketPriority.HIGH: (timedelta(hours=2), timedelta(days=1)),
+    TicketPriority.URGENT: (timedelta(minutes=30), timedelta(hours=8)),
+}
 
 
 class TicketService:
@@ -12,11 +21,17 @@ class TicketService:
         self.db = db
 
     async def create_ticket(self, ticket_in: TicketCreate) -> Ticket:
-        # ⛔️ Проверка на существующую очередь
+        # Проверка на очередь
         queue = await CRUDQueue.get(self.db, ticket_in.queue_id)
         if not queue:
             raise HTTPException(status_code=400, detail="Очередь с таким ID не существует")
-        return await CRUDTicket.create(self.db, ticket_in)
+
+        # 🎯 Вычисляем дедлайны
+        now = datetime.now()
+        frt_deadline, ttr_deadline = get_deadlines_by_priority(ticket_in.priority, now)
+
+        # Передаём в CRUD
+        return await CRUDTicket.create(self.db, ticket_in, frt_deadline=frt_deadline, ttr_deadline=ttr_deadline)
 
     async def get_all_tickets(self) -> list[Ticket]:
         return await CRUDTicket.get_all(self.db)

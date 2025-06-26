@@ -190,8 +190,8 @@
 - **FastAPI** – REST API + WebSocket
 - **SQLAlchemy + Alembic** – ORM и миграции
 - **PostgreSQL** – хранилище данных
-- **Celery + Redis** (планируется) – фоновая обработка
-- **SMTP/IMAP** – email-интеграция
+- **BackgroundTasks FastAPI** – фоновая обработка
+- **IMAP Yandex** – email-интеграция
 
 ---
 

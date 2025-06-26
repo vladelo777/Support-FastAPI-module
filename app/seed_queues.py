@@ -9,7 +9,6 @@ def seed_queues():
         existing = result.scalars().all()
 
         if existing:
-            print("Очереди уже существуют")
             return
 
         queues = [

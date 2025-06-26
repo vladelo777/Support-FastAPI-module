@@ -8,13 +8,16 @@ from app.routers import tickets, messages, note, ws_support, queue, attachments
 from app.database import engine, Base
 from app.email.email_task import periodic_email_check
 from app.background.deadline_monitor import monitor_deadlines
+from app.seed_queues import seed_queues
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-
     # Создание папки для вложений, если нет
     os.makedirs("uploads", exist_ok=True)
+
+    # Добавление фиксированных очередей в БД
+    seed_queues()
 
     # 🔁 Запуск фоновых задач
     email_task = asyncio.create_task(periodic_email_check())

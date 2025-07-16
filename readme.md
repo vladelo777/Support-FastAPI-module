@@ -5,7 +5,7 @@
 
 **Автор:** Владислав Лахтионов
 
-**Telegram:** @vladelo
+**Telegram:** @vladelo 
 
 ---
 

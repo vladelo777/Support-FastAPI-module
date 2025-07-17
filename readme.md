@@ -186,7 +186,7 @@
 ---
 
 ## 🚀 Технологии
- 
+
 - **FastAPI** – REST API + WebSocket
 - **SQLAlchemy + Alembic** – ORM и миграции
 - **PostgreSQL** – хранилище данных

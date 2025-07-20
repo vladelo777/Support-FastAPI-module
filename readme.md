@@ -4,7 +4,7 @@
 знаний. Разрабатывается поэтапно на FastAPI + PostgreSQL + SQLAlchemy.
 
 **Автор:** Владислав Лахтионов
- 
+
 **Telegram:** @vladelo
 
 ---
